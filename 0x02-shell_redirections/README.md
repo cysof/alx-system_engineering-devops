@@ -1,1 +1,2 @@
-script that is printing Hello world
+// 0x02-shell_redirections
+//script that is printing Hello world
