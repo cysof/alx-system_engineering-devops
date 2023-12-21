@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Display Best School to stdout using while loop.
+str="Best School"
+i=0
+while (( i < 10 ));
+do
+	echo "$str";
+	(( i++ ));
+done
