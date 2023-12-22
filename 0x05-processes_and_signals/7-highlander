@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+msg()
+{
+	echo "I am invincible!!!"
+}
+trap "msg" SIGTERM
+
+while true
+do
+	echo "To infinity and beyond"
+	sleep 2
+done
+
