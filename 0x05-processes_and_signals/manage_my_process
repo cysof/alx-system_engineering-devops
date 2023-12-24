@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Infinitly print message into file.
+
+echo "I am alive!" > /tmp/my_process
+while ((1))
+do
+    echo "I am alive!" >> /tmp/my_process
+    sleep 2
+done
