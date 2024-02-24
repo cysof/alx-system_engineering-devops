@@ -1,6 +1,7 @@
 #Using puppet to create a file with below specifications
 
 file { 'school':
+
     ensure => file,
     path   => '/tmp/school',
     mode   => '0744',
