@@ -17,6 +17,8 @@ sudo apt-get install -y nginx
 # Ensure nginx is listening to port 80
 sudo ufw allow 'Nginx HTTP'
 
+sudo chown -R $USER:$USER /var/www/html
+
 # Set up the default page
 echo "Hello World!" > /var/www/html/index.html
 
