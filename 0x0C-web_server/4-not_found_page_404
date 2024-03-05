@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# bash script to make /redirect_me redirect to another site
-apt-get -y update
-apt-get -y install nginx
-mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.txt
-echo "Hello World!" > /usr/share/nginx/html/index.html
-new_string=".rules\n\t\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;\n"
-sed -i "s/.rules/$new_string/" /etc/nginx/sites-available/default
-echo "Ceci n'est pas une page\n" > /usr/share/nginx/html/404.html
-sed -i "s/#error_page 404 \/404.html;/error_page 404 \/404.html;/" /etc/nginx/sites-available/default
-service nginx restart
+# Configures a new Ubuntu machine
+
+sudo apt -y update
+
+sudo apt -y install nginx
+
+#ufw allow 'Nginx HTTP'
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+sed -i 's/server_name _;/server_name _;\n\trewrite \/redirect_me https:\/\/www.youtube.com\/watch\?v=QH2-TGUlwu4 permanent;\n\terror_page 404 \/404.html;\n\tlocation \/404.html{\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}/' /etc/nginx/sites-enabled/default
+
+sudo service nginx restart
