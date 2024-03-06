@@ -9,7 +9,7 @@ sudo apt-get -y update
 sudo apt-get -y install nginx
 
 # Create simple HTML files
-echo "Hello World!" | sudo tee /var/www/html/index.html
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
 echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
 # Create Nginx configuration snippet
