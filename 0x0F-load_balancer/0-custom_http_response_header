@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
-# Configure web-02 to be identical with web-01
-#an ubuntu machine to have a custom header X-Served-By
+# Customizing a 404-error_page
 
-# Update package information
-sudo apt-get -y update
+# Updating Packages before performing installations
+sudo apt-get update
+sudo apt-get install -y nginx
 
-# Install Nginx
-sudo apt-get -y install nginx
+# Creating an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Create simple HTML files
-echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
+# Performing a "moved permanently redirection" (301)
+new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/cysof permanent;"
+sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+
+# Creating a 404 Custom error page
 echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
 
-# Create Nginx configuration snippet
-new_config="add_header X-Served-By \$hostname;\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n\n\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\tinternal;\n\t}\n"
+sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/default
 
-# Update Nginx configuration
-sudo sed -i "/server_name _;/c\\$new_config" /etc/nginx/sites-enabled/default
-# sudo sed -i "s#server_name _;#$new_config#" /etc/nginx/sites-enabled/default
+# Creating an HTTP response header
+sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
 
-# Restart Nginx to apply changes
+# Testing configurations for syntax errors
+sudo nginx -t
+
+# Restart nginx after implementing changes
 sudo service nginx restart
