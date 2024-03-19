@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#updateing packages
+sudo apt update
+
+#installing mysql-server package
+sudo apt install mysql-server -y
+
+#Ensure that the server is running using the systemctl start command:
+sudo systemctl start mysql.service
