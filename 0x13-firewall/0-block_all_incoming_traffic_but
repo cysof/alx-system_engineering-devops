@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# install the uncomplicated firewall (UFW) and setup a few rules on the web-01
+
+#update package information
+sudo apt-get update -y
+
+#install UFW firewall
+sudo apt-get install ufw -y
+
+#Enabling UFW
+sudo ufw enable
+
+#setting default polices
+sudo ufw default deny incoming -y
+sudo ufw default allow outgoing -y
+
+#Allowing HTTPS(port 443)
+sudo ufw allow 443/tcp
+
+#ALLO HTTPS (Port 22)
+sudo ufw allow 22/tcp
+
+#ALL HTTPS (Port 80)
+sudo ufw allow 80/tcp
