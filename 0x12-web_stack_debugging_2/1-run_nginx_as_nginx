@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scrip that configures container in such a way that nginx must be running as nginx user
+# scrip that configures container in such a way that nginx must be running as ngin
 
 # Use variables for paths
 NGINX_CONF="/etc/nginx/nginx.conf"
