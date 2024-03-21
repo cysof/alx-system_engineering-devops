@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# scrip that configures container in such a way that nginx must be running as nginx user
+
+# Use variables for paths
+NGINX_CONF="/etc/nginx/nginx.conf"
+DEFAULT_SITE="/etc/nginx/sites-available/default"
+
+# Update Nginx configuration to run as nginx user
+sed -i 's/#user www-data/user nginx;/' "$NGINX_CONF"
+
+# Update default site configuration to listen on port 8080
+sed -i "s/80/8080/g" "$DEFAULT_SITE"
+
+chmod 644 /etc/nginx/nginx.conf
+pkill apache2
+
+# Restart Nginx
+sudo -u nginx service nginx start
