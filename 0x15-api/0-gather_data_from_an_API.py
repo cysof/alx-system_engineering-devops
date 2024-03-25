@@ -10,8 +10,8 @@ Requirements:
 - Display progress information in the specified format
 """
 
-import sys
 import requests
+import sys
 
 
 def get_employee_todo_progress(employee_id):
@@ -43,6 +43,8 @@ def get_employee_todo_progress(employee_id):
     # Display progress information
     print("Employee {} is done with tasks ({}/{}):".format(
         employee_name, completed_tasks, total_tasks), end='\n')
+    # print("{}: {} completed tasks out of {}".format(
+    # employee_name, completed_tasks, total_tasks))
 
     # Display titles of completed tasks
     for task in todos_data:
@@ -61,4 +63,3 @@ if __name__ == "__main__":
 
     # Call the function to get and display TODO list progress
     get_employee_todo_progress(employee_id)
-
