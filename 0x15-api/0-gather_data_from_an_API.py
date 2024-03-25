@@ -1,54 +1,65 @@
 #!/usr/bin/python3
+
 """
-This script retrieves information about an employee's TODO list progress from a given employee ID using a REST API.
+Script to retrieve and display TODO list progress for a given employee
+using a REST API.
+
+Requirements:
+- Use urllib or requests module
+- Accept an integer as a parameter (employee ID)
+- Display progress information in the specified format
 """
 
-import sys
 import requests
+import sys
 
 
 def get_employee_todo_progress(employee_id):
-    """
-    Retrieves and displays information about an employee's TODO list progress.
+    """ Fetches and displays TODO list progress for a given employee.
 
     Args:
-        employee_id (int): The ID of the employee whose progress is to be retrieved.
+    - employee_id (int): ID of the employee to retrieve TODO list for.
 
     Returns:
-        None
+    - None
     """
-    base_url = 'https://jsonplaceholder.typicode.com'
-    todo_url = f'{base_url}/todos?userId={employee_id}'
+    base_url = "https://jsonplaceholder.typicode.com"
+    user_url = "{}/users/{}".format(base_url, employee_id)
+    todos_url = "{}/todos?userId={}".format(base_url, employee_id)
 
-    try:
-        response = requests.get(todo_url)
-        response.raise_for_status()
-        todos = response.json()
-        completed_tasks = [todo for todo in todos if todo['completed']]
-        total_tasks = len(todos)
-        num_completed_tasks = len(completed_tasks)
-        employee_name = todos[0]['username']
+    # Fetch user information
+    user_response = requests.get(user_url)
+    user_data = user_response.json()
+    employee_name = user_data.get('name')
 
-        print(f"Employee {employee_name} is done with tasks ({num_completed_tasks}/{total_tasks}):")
+    # Fetch TODO list for the employee
+    todos_response = requests.get(todos_url)
+    todos_data = todos_response.json()
 
-        for task in completed_tasks:
-            print(f"\t{task['title']}")
+    # Calculate progress
+    total_tasks = len(todos_data)
+    completed_tasks = sum(task.get("completed", False) for task in todos_data)
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error occurred: {e}")
-        sys.exit(1)
+    # Display progress information
+    print("Employee {} is done with tasks ({}/{}):".format(
+        employee_name, completed_tasks, total_tasks), end='\n')
+    # print("{}: {} completed tasks out of {}".format(
+    # employee_name, completed_tasks, total_tasks))
+
+    # Display titles of completed tasks
+    for task in todos_data:
+        if task.get('completed', False):
+            print("\t {}".format(task.get("title")))
 
 
 if __name__ == "__main__":
+    # Check if the correct number of command-line arguments is provided
     if len(sys.argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
+        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
         sys.exit(1)
 
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Employee ID must be an integer")
-        sys.exit(1)
+    # Extract employee ID from command-line arguments
+    employee_id = int(sys.argv[1])
 
+    # Call the function to get and display TODO list progress
     get_employee_todo_progress(employee_id)
-
