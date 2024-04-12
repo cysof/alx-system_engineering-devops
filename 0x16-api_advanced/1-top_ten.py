@@ -1,41 +1,33 @@
 #!/usr/bin/python3
 
 """
-Query Reddit API for titles of top ten posts of a given subreddit
+prints the titles of the first 10 hot posts listed for a given subreddit
 """
 
-import requests
+from requests import get
 
 
 def top_ten(subreddit):
     """
-    Prints the titles of the first 10 hot posts for a given subreddit.
-
-    Args:
-    - subreddit (str): The name of the subreddit.
-    Returns:
-    - None
+    function that queries the Reddit API and prints the titles of the first
+    10 hot posts listed for a given subreddit
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    # Ensure a custom User-Agent to prevent errors.
-    headers = {'User-Agent': 'My User Agent'}
+
+    if subreddit is None or not isinstance(subreddit, str):
+        print("None")
+
+    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
+    params = {'limit': 10}
+    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
+
+    response = get(url, headers=user_agent, params=params)
+    results = response.json()
 
     try:
-        # Send GET request to Reddit API
-        response = requests.get(url, headers=headers)
-        # Parse response as JSON
-        data = response.json()
+        my_data = results.get('data').get('children')
 
-        # Check if 'data' key exists and 'children' key exists within it
-        if 'data' in data and 'children' in data['data']:
-            # Extract the first 10 posts
-            posts = data['data']['children'][:10]
-            # Print the titles of the posts
-            for post in posts:
-                print(post['data']['title'])
-        else:
-            # Print None if 'data' or 'children' key doesn't exist
-            print(None)
-    except requests.RequestException:
-        # Print None if there's any exception during the request
-        print(None)
+        for i in my_data:
+            print(i.get('data').get('title'))
+
+    except Exception:
+        print("None")

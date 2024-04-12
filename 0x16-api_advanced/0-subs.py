@@ -1,35 +1,27 @@
 #!/usr/bin/python3
+"""
+number of subscribers for a given subreddit
+"""
 
-import requests
+from requests import get
+
 
 def number_of_subscribers(subreddit):
     """
-    Returns the number of subscribers for a given subreddit.
-
-    Args:
-    - subreddit (str): The name of the subreddit.
-    Returns:
-    - int: Number of subscribers, or 0 if the subreddit is invalid.
+    function that queries the Reddit API and returns the number of subscribers
+    (not active users, total subscribers) for a given subreddit.
     """
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
 
-    # Set a custom User-Agent to avoid being blocked
-    headers = {'User-Agent': 'My User Agent'}
+    if subreddit is None or not isinstance(subreddit, str):
+        return 0
 
-    # Send GET request to the Reddit API
-    response = requests.get(url, headers=headers)
+    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
+    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
+    response = get(url, headers=user_agent)
+    results = response.json()
 
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        # Parse JSON response
-        data = response.json()
-        
-        # Check if the subreddit exists
-        if 'data' in data and 'subscribers' in data['data']:
-            return data['data']['subscribers']
-        else:
-            # Subreddit does not exist or API response format changed
-            return 0
-    else:
-        # Request failed, possibly due to invalid subreddit or other issues
+    try:
+        return results.get('data').get('subscribers')
+
+    except Exception:
         return 0
