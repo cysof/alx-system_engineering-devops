@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-# Commands to install Nginx on Web-Sever-01
+#  A Script that configures a new Ubuntu machine to Perform a 301-redirection
 
-# Updating Packages before making Installations
+# Upadating Packages before Installations
 sudo apt-get update
-sudo apt-get -y install nginx
-
-# Configuring the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
-sudo ufw allow 'Nginx HTTP'
+sudo apt-get install -y nginx
 
 # Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Testing Nginx configurations for Syntax errors
-sudo nginx -t
+# Performing a 301 Redirection
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/cysof permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-# Restarting Nginx
-sudo service nginx start
+# Restarting Nginx service
+sudo service nginx restart
