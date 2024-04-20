@@ -1,0 +1,43 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # Adding a custom header to indicate which server served the request
+    add_header X-Served-By $hostname;
+
+    # Set the root directory for serving static files
+    root /var/www/html;
+    index index.html index.htm;
+
+    # Server name, can be your domain name or IP address
+    server_name _;
+
+    # Location block for proxying requests to your application server
+    location /airbnb-onepage/ {
+        # Proxy pass requests to the process listening on port 5000
+        proxy_pass http://127.0.0.1:5000;
+        # Include necessary proxy headers for the correct client IP
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Location block for serving static files
+    location /hbnb_static/ {
+        alias /data/web_static/current/;
+    }
+
+    # Default location block to serve other requests
+    location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404
+        try_files $uri $uri/ =404;
+    }
+
+    # Location block for redirecting requests
+    location /redirect_me {
+        return 301 https://www.github.com/cysof
+    }
+}
+
